@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h1>
+    <b>
+        Profiles
+    </b>
+</h1>
+<hr>
+<div class="row justify-content-center">
+    <div class="col-sm-8">
+        {% for profile in profiles %}
+
+            <div class="card mb-3" style="border-top: 5px solid #00acee;">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="circle" style="background-color: #00acee; border-radius: 50%; width: 100px; height: 100px; overflow:hidden">
+                                <img src="{{url_for('static', filename=profile.photo)}}" alt="" style="max-width: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <h2>
+                                {{ profile.firstname }} {{ profile.lastname }}
+                            </h2>
+
+                            <h5>
+                                <span>
+                                    <i class="fa fa-user-circle"></i>
+                                    {{ profile.gender }}
+                                </span>
+                            </h5>
+
+                            <h5>
+                                <span>
+                                    <i class="fa fa-map-marker"></i>
+                                    {{ profile.location }}
+                                </span>
+                            </h5>
+
+
+                            
+                        </div>
+
+                        <div class="col-sm-3">
+                            <a href="{{ url_for('viewProfile', id=profile.id) }}" class="btn btn-success">
+                                View Profile
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        {% endfor %}
+
+
+    </div>
+</div>
+
+
+{% endblock %}

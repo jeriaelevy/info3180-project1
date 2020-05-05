@@ -4,51 +4,102 @@ Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
 Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
-from app import mail
-from flask_mail import Message 
-from app import app
+
+from app import app, db
 from flask import render_template, request, redirect, url_for, flash
+from flask_uploads import UploadSet, configure_uploads, IMAGES
 from wtforms.validators import DataRequired
-from .forms import ContactForm
-
-
+from .forms import ProfileForm
+from app.models import UserProfile
+import os
+from werkzeug.utils import secure_filename
+from datetime import datetime
 
 ###
 # Routing for your application.
 ###
 
-app.config['SECRET_KEY'] = 'thecodex'
+# app.config['SECRET_KEY'] = 'thecodex'
+UPLOAD_FOLDER = '/Users/Jeria/Documents/Projects/info3180-project1/app/static'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def home():
     """Render website's home page."""
     return render_template('home.html')
 
+
 @app.route('/about/')
 def about():
     """Render the website's about page."""
     return render_template('about.html', name="Jeria Levy")
-
-@app.route('/contact', methods=['GET', 'POST'])
-def contact():
-    form = ContactForm()
+    
+@app.route('/profile/', methods=['GET'])
+def profile():
+    """Render the website's about page."""
+    profileForm = ProfileForm()
     error = None
-    if request.method == 'POST':
-        msg = Message(request.form['subject'],
-                    sender=request.form['email'],
-                    recipients=["jeria.levy@gmail.com"])
-        msg.body = request.form['message']
-        mail.send(msg) 
-    else:
-        error = 'Invalid data submitted, please try again'
-    return render_template('contact.html', form=form, error=error)
+    return render_template('profile.html', name="Profile", form=profileForm, error=error)
+
+@app.route('/profiles/')
+def profiles():
+
+    results = []
+
+    profiles = db.session.query(UserProfile)
+
+    results = profiles.all()
+
+    return render_template('profiles.html', name="UWI Students", profiles=results, len=results)
+
+@app.route('/view-profile/<id>')
+def viewProfile(id):
+
+
+
+    getMyId = id
+    myProfile = UserProfile.query.filter_by(id=getMyId).first()
+
+    dateClean = datetime.strftime(myProfile.created_on, '%B %d, %Y')
+    
+    return render_template('view.html', myProfile=myProfile, acc_created=dateClean)
  
 @app.route('/submit', methods=('GET', 'POST'))
 def submit():
-    form = ContactForm()
-    if form.validate_on_submit():
-        return redirect('/success')
-    return render_template('submit.html', form=form)
+    form = ProfileForm()
+
+    # if form.validate_on_submit():
+
+    if request.method == 'POST':
+
+        req = request.form
+
+        file = request.files.get('photo')
+
+        filename = secure_filename(file.filename)
+
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        new_profile = UserProfile(
+            firstname = req.get('firstName'),
+            lastname = req.get('lastName'),
+            email = req.get('email'),
+            bio = req.get('biography'),
+            location = req.get('location'),
+            photo = file.filename,
+            gender = req.get('gender'),
+            photo_data = file.read()
+        )   
+
+        db.session.add(new_profile)
+        db.session.commit()
+        return redirect(url_for('profiles'))
+    else:
+        return redirect(url_for('profile'))
+
+
+    # return render_template('submit.html', form=form)
 
 ###
 # The functions below should be applicable to all Flask apps.

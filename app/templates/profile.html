@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h1>
+    <b>
+        Add Profile
+    </b>
+</h1>
+
+<div class="card" style="border-top: 7px solid #00acee;">
+    <div class="card-body">
+        <form action="/submit" method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+        
+        
+            <div class="row">
+
+                <div class="col-sm-12 form-group">
+                    {{ form.firstName.label }}
+                    <br>
+                    {{ form.firstName(class="form-control") }}
+                </div>
+        
+                <div class="col-sm-12 form-group">
+                    {{ form.lastName.label }}
+                    <br>
+                    {{ form.lastName(class="form-control") }}
+                </div>
+
+
+                <div class="col-sm-12 form-group">
+                    {{ form.email.label }}
+                    <br>
+                    {{ form.email(class="form-control", type="email") }}
+                </div>
+        
+                <div class="col-sm-12 form-group">
+                    {{ form.gender.label }}
+                    <br>
+                    {{ form.gender(class="form-control") }}
+                </div>
+
+                <div class="col-sm-12 form-group">
+                    {{ form.location.label }}
+                    <br>
+                    {{ form.location(class="form-control") }}
+                </div>
+
+                <div class="col-sm-12 form-group">
+                    {{ form.biography.label }}
+                    <br>
+                    {{ form.biography(class="form-control") }}
+                </div>
+
+                <div class="col-sm-12 form-group">
+                    {{ form.photo.label }}
+                    <br>
+                    {{ form.photo(class="form-control") }}
+                </div>
+
+
+                <div class="col-sm-12 form-group">
+
+                    <button class="btn btn-primary" type="submit">Add Profile</button>
+                </div>
+
+
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+{% endblock %}

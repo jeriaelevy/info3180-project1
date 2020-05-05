@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<div class="card" style="border-top: 7px solid #00acee;">
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="circle" style="background-color: #00acee; border-radius: 50%; width: 150px; height: 150px; overflow:hidden">
+                    <img src="{{url_for('static', filename=myProfile.photo)}}" alt="" style="max-width: 100%; object-fit: cover;">
+                </div>
+            </div>
+
+            <div class="col-sm-9">
+                <h3>
+                    {{ myProfile.firstname }} {{ myProfile.lastname }}
+                </h3>
+
+                <h5>
+                    <span>
+                        <i class="fa fa-envelope"></i>
+                        {{ myProfile.email }}
+                    </span>
+                </h5>
+
+                <h5>
+                    <span>
+                        <i class="fa fa-map-marker"></i>
+                        {{ myProfile.location }}
+                    </span>
+                </h5>
+
+                <h5>
+                    <span>
+                        <i class="fa fa-calendar"></i>
+                        {{ acc_created }}
+                    </span>
+                </h5>
+
+            </div>
+        </div>
+
+        <hr>
+       
+        <h4>
+            <b>
+                About Me
+            </b>
+        </h4>
+
+        <p>
+            {{ myProfile.bio }}
+        </p>
+
+    </div>
+</div>
+
+
+
+{% endblock %}
